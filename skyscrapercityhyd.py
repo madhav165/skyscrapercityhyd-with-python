@@ -8,7 +8,16 @@ global URL
 
 def set_url():
     global URL
-    URL = "http://www.skyscrapercity.com/showthread.php?t=459134&page=698"
+    lastpage = get_last_page()
+    URL = "http://www.skyscrapercity.com/showthread.php?t=459134&page="+str(lastpage+1)
+
+def get_last_page():
+    with open('finalpage.txt', 'r') as f:
+        return int(f.readlines()[0])
+
+def set_last_page(last_page):
+    with open('finalpage.txt', 'w') as f:
+        f.write(last_page)
 
 def get_html():
     with urllib.request.urlopen(URL) as response:
@@ -17,6 +26,7 @@ def get_html():
 def get_posts(html_doc):
     soup = BeautifulSoup(html_doc, 'lxml')
     title = soup.title.string.strip()
+    lastpage = title.split()[7]
     usernames = []
     posts = []
     tempuns = soup.findAll('a', class_='bigusername')
