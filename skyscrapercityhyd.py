@@ -3,6 +3,7 @@
 import urllib.request
 from bs4 import BeautifulSoup
 import re
+import os
 
 global URL
 
@@ -12,11 +13,13 @@ def set_url():
     URL = "http://www.skyscrapercity.com/showthread.php?t=459134&page="+str(lastpage+1)
 
 def get_last_page():
-    with open('/home/madhav/git/skyscrapercityhyd-with-python/finalpage.txt', 'r') as f:
+    location = os.path.dirname(os.path.realpath(__file__))
+    with open(location+'/finalpage.txt', 'r') as f:
         return int(f.readlines()[0])
 
 def set_last_page(last_page):
-    with open('/home/madhav/git/skyscrapercityhyd-with-python/finalpage.txt', 'w') as f:
+    location = os.path.dirname(os.path.realpath(__file__))
+    with open(location+'/finalpage.txt', 'w') as f:
         f.write(last_page)
 
 def get_html():
