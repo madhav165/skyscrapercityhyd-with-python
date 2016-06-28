@@ -40,6 +40,14 @@ def remove_attrs(soup, whitelist=tuple()):
             del tag[attr]
     return soup
 
+def get_all_links(soup):
+    links_list = ''
+    for link_soup in soup.findAll('a'):
+        link  = link_soup.get('href')
+        if (link.split('.')[0] != 'showthread'):
+            links_list = links_list + '\n'+ link
+    return links_list
+
 def get_posts(html_doc):
     soup = BeautifulSoup(html_doc, 'lxml')
     title = soup.title.string.strip()
@@ -52,17 +60,19 @@ def get_posts(html_doc):
         usernames.append(x.string.strip())
     tempps = soup.findAll('div', id=re.compile('^post_message_.*'))
     for y in tempps:
-        quote = y.find('table')
-        if (quote is not None):
-            quote = remove_attrs(quote)
-            quote_text = '\t'+quote.text.strip().replace('\n','\n\t')+'\n\n'
-            y.div.decompose()
-            #posts.append('**********\n\n'+str(quote_text)+'\n\n**********\n\n'+y.text.strip())
-            posts.append(str(quote_text)+y.text.strip())
+        if (y.table is None):
+            links_list = get_all_links(y)
+            posts.append (y.text.strip()+links_list)
         else:
-            posts.append (y.text.strip())
-    #for x in tempps:
-    #    posts.append(x.text.strip().replace("\t","").replace("\n\n\n","\n"))
+            quotes = y.findAll('table')
+            quote_text_list = ''
+            for quote in quotes:
+                links_list = get_all_links(quote)
+                quote = remove_attrs(quote)
+                quote_text = '\t'+(quote.text.strip()+links_list).replace('\n','\n\t')+'\n\n'
+                y.div.decompose()
+                quote_text_list+=str(quote_text)+'\n'
+            posts.append(quote_text_list+y.text.strip())
     return (title, zip(usernames, posts))
 
 def print_posts(title, posts):
