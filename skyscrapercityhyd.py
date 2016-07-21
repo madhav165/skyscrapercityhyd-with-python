@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import re
 import os
 import contextlib
+import locale
 
 global URL
 
@@ -27,10 +28,10 @@ def get_html():
     #ua = UserAgent()
     #ua.chrome
     req = urllib.request.Request(URL,
-                                headers={'User-Agent': 'Mozilla/5.0 \
-                                         (X11; Linux x86_64) \
-                                          AppleWebKit/537.36 (KHTML, like Gecko) \
-                                          Chrome/53.0.2774.3 Safari/537.36'})
+                                headers={'User-Agent': '''Mozilla/5.0 
+                                         (X11; Linux x86_64) 
+                                          AppleWebKit/537.36 (KHTML, like Gecko) 
+                                          Chrome/53.0.2774.3 Safari/537.36'''})
     with contextlib.closing(urllib.request.urlopen(req)) as f:
         return f.read().decode('ISO-8859-1')
 
