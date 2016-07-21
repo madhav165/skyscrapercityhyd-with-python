@@ -56,14 +56,16 @@ def get_posts(html_doc):
     set_last_page (lastpage)
     usernames = []
     posts = []
+    user_append = usernames.append
+    post_append = posts.append
     tempuns = soup.findAll('a', class_='bigusername')
     for x in tempuns:
-        usernames.append(x.string.strip())
+        user_append(x.string.strip())
     tempps = soup.findAll('div', id=re.compile('^post_message_.*'))
     for y in tempps:
         if (y.table is None):
             links_list = get_all_links(y)
-            posts.append (y.text.strip()+links_list)
+            post_append (y.text.strip()+links_list)
         else:
             quotes = y.findAll('table')
             quote_text_list = ''
@@ -73,7 +75,7 @@ def get_posts(html_doc):
                 quote_text = '\t'+(quote.text.strip()+links_list).replace('\n','\n\t')+'\n\n'
                 y.div.decompose()
                 quote_text_list+=str(quote_text)+'\n'
-            posts.append(quote_text_list+y.text.strip())
+            post_append(quote_text_list+y.text.strip())
     return (title, zip(usernames, posts))
 
 def print_posts(title, posts):
