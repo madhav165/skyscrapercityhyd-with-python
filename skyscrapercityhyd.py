@@ -79,9 +79,10 @@ def get_posts(html_doc):
     return (title, zip(usernames, posts))
 
 def print_posts(title, posts):
-    print("\n===== "+title+" =====\n")
+    print ("\033[1m"+title+"\033[0m\n")
     for x in posts:
-        print("==="+str(x[0])+"===\n\n"+str(x[1])+"\n")
+        print("\033[1m"+str(x[0])+"\033[0m\n")
+        print(str(x[1])+"\n")
 
 set_url()
 html_doc = get_html()
