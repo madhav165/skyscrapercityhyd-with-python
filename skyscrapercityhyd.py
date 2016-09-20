@@ -72,7 +72,7 @@ def get_posts(html_doc):
             for quote in quotes:
                 links_list = get_all_links(quote)
                 quote = remove_attrs(quote)
-                quote_text = '\t'+(quote.text.strip()+links_list).replace('\n','\n\t')+'\n\n'
+                quote_text="\x1B[3m"+quote.text.strip()+links_list+"\x1B[23m\n"
                 y.div.decompose()
                 quote_text_list+=str(quote_text)+'\n'
             post_append(quote_text_list+y.text.strip())
