@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-import urllib.request
+import requests
 from bs4 import BeautifulSoup
 import re
 import os
-import contextlib
-import locale
+import sys
 
 global URL
 
@@ -25,15 +24,12 @@ def set_last_page(last_page):
         f.write(last_page)
 
 def get_html():
-    #ua = UserAgent()
-    #ua.chrome
-    req = urllib.request.Request(URL,
-                                headers={'User-Agent': '''Mozilla/5.0 
-                                         (X11; Linux x86_64) 
-                                          AppleWebKit/537.36 (KHTML, like Gecko) 
-                                          Chrome/53.0.2774.3 Safari/537.36'''})
-    with contextlib.closing(urllib.request.urlopen(req)) as f:
-        return f.read().decode('ISO-8859-1')
+    try:
+        r = requests.get(URL, timeout=5)
+        return r.content
+    except requests.exceptions.Timeout:
+        print ('Timeout occurred.\nTry to increase timeout and try again.')
+        sys.exit()
 
 def remove_attrs(soup, whitelist=tuple()):
     for tag in soup.findAll(True):
